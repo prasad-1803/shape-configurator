@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import TopHead from './TopHead';
-import CylinderPart from './CylinderPart';
-import LowerBottom from './LowerBottom';
-import Base from './Base';
+
+
 import "./VesselConfig.css";
 
 const VesselConfigurator = () => {
