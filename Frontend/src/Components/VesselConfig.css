@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+
+.body {
+  margin-top: 0px;
+  margin-left: 400px;
+  margin-right: 400px;
+  margin-bottom: 50px;
+  padding: 50px;
+}
+
+#header {
+  margin-top: 0px;
+  text-align: center;
+}
+
+.config-section {
+  border-bottom: 2px solid #000; /* Line break between sections */
+  padding-bottom: 20px;
+  padding-top: 20px; /* Padding at the top to ensure spacing */
+}
+
+.label-input-container label {
+  font-size: 18px;
+  font-weight: bold; /* Adjust font size for labels */
+}
+
+.label-input-container input[type="number"],
+.label-input-container select {
+  font-size: 16px; /* Adjust font size for inputs */
+  width: 170px; /* Adjust width as needed */
+  padding: 6px; /* Decreased padding for smaller height */
+  height: 30px; /* Set height for inputs */
+  margin-left: 10px;
+  margin-right: 6px;
+}
+
+.label-input-container {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #87CEEB; /* Blue Sky color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+  background-color: #4682B4; /* Darker shade of blue for hover effect */
+}
+
+/* Added styles from ShapeConfigurator.css */
+.shape-configurator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f0f0f0; /* Light background for better contrast */
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.shape-configurator h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; /* Darker color for better readability */
+}
+
+.shape-configurator label {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.shape-configurator input {
+  padding: 8px;
+  margin-left: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shape-configurator #shape-container {
+  width: 400px;
+  height: 300px; /* Adjust height as needed */
+  background-color: silver; /* Background color for the rendering area */
+  margin: 20px auto;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ccc; /* Optional border for visibility */
+  border-radius: 8px;
+}
+
+.shape-configurator canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.shape-configurator p {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333; /* Dark color for better visibility */
+}
+
+/* Render container */
+.render-container {
+  width: 400px;
+  height: 280px; /* Ensure this is not zero or too small */
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  background-color: silver;
+  position: relative;
+}
+
+/* Section-specific styles */
+#top-head-section {
+  display: flex;
+  align-items: flex-start; /* Align items at the start of the flex container */
+  justify-content: space-between; /* Space between items */
+  margin-bottom: 20px; /* Space between sections */
+}
+
+#top-head-section-1 {
+  flex: 1;
+  margin-right: 20px; /* Space between the input fields and the 3D model */
+}

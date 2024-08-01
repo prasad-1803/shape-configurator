@@ -1,10 +1,14 @@
 import React from 'react';
-import ShapeConfigurator from './Components/ShapeConfigurator';
+import CylinderPart from './Components/CylinderPart';
+
+import VesselConfigurator from './Components/VesselConfig';
+import { Cylinder } from '@react-three/drei';
 
 function App() {
     return (
         <div className="App">
-            <ShapeConfigurator />
+           <VesselConfigurator/>
+            <CylinderPart />
         </div>
     );
 }
