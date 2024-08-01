@@ -4,17 +4,16 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import './CylinderPart.css';
 
-const CylinderPart = ({ initialDimensions }) => {
-    const [dimensions, setDimensions] = useState(initialDimensions);
+const CylinderPart = () => {
+    const [dimensions, setDimensions] = useState({ 
+        sheetThickness: 3, // mm
+        outerDiameter: 500, // mm
+        height: 2500 // mm
+    });
     const [volume, setVolume] = useState(null);
 
     useEffect(() => {
-        setDimensions(initialDimensions);
-    }, [initialDimensions]);
-
-    useEffect(() => {
         renderCylinder();
-        calculateVolume();
     }, [dimensions]);
 
     const handleDimensionChange = (event) => {
@@ -40,32 +39,40 @@ const CylinderPart = ({ initialDimensions }) => {
         }
     };
 
+    useEffect(() => {
+        calculateVolume();
+    }, [dimensions]);
     const renderCylinder = () => {
         const container = document.getElementById('shape-container');
         if (!container) return;
-
+    
         container.innerHTML = '';
-
+    
+        // Set up the scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
-
-        scene.background = new THREE.Color(0xc0c0c0);
-
+    
+        // Set background color of the scene to silver
+        scene.background = new THREE.Color(0xc0c0c0); // Silver color
+    
+        // Add OrbitControls for better interaction
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
-
-        const ambientLight = new THREE.AmbientLight(0x404040);
+    
+        // Add Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
         scene.add(ambientLight);
-
+    
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(10, 10, 10);
+        directionalLight.position.set(10, 10, 10); // Positioned higher and at an angle
         scene.add(directionalLight);
-
+    
+        // Create silver material with environment map
         const loader = new THREE.CubeTextureLoader();
         const texture = loader.load([
             'path/to/px.jpg',
@@ -75,64 +82,76 @@ const CylinderPart = ({ initialDimensions }) => {
             'path/to/pz.jpg',
             'path/to/nz.jpg',
         ]);
-
+    
         const silverMaterial = new THREE.MeshStandardMaterial({
-            color: 0xcccccc,
-            metalness: 1.0,
-            roughness: 0.2,
-            envMap: texture,
-            envMapIntensity: 1
+            color: 0xcccccc, // Silver color
+            metalness: 1.0, // High metalness for metallic appearance
+            roughness: 0.2, // Slight roughness for a realistic metal look
+            envMap: texture, // Environment map for reflections
+            envMapIntensity: 1 // Intensity of environment map reflections
         });
-
-        const outerRadius = dimensions.outerDiameter / 2000;
-        const height = dimensions.height / 1000;
-
-        const outerGeometry = new THREE.CylinderGeometry(outerRadius, outerRadius, height, 32, 1, true);
+    
+        // Convert dimensions to meters
+        const outerRadius = dimensions.outerDiameter / 2000; // Outer radius in meters
+        const height = dimensions.height / 1000; // Height in meters
+    
+        // Create outer cylinder
+        const outerGeometry = new THREE.CylinderGeometry(outerRadius, outerRadius, height, 32, 1, true); // True for open ended
         const outerCylinder = new THREE.Mesh(outerGeometry, silverMaterial);
-
+    
+        // Add edges to highlight borders
         const edgeGeometry = new THREE.EdgesGeometry(outerGeometry);
         const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
         const edges = new THREE.LineSegments(edgeGeometry, edgeMaterial);
-
+    
+        // Group the cylinder and edges
         const group = new THREE.Group();
         group.add(outerCylinder);
-        group.add(edges);
+        group.add(edges); // Add edges to the same group
         scene.add(group);
-
+    
+        // Center the model
         const boundingBox = new THREE.Box3().setFromObject(group);
         const boxSize = boundingBox.getSize(new THREE.Vector3()).length();
         const boxCenter = boundingBox.getCenter(new THREE.Vector3());
-
-        camera.position.z = boxSize * 1.5;
-        camera.position.y = boxCenter.y;
+    
+        // Adjust camera position
+        camera.position.z = boxSize * 1.5; // Adjust camera distance based on size
+        camera.position.y = boxCenter.y; // Center vertically
         camera.lookAt(boxCenter);
+    
+        // Ensure the camera is looking at the center of the group
         controls.target.copy(boxCenter);
-
+    
+        // Animation loop
         const animate = () => {
             requestAnimationFrame(animate);
-            group.rotation.x += 0.002;
-            group.rotation.y += 0.002;
+            group.rotation.x += 0.002; // Slower rotation speed
+            group.rotation.y += 0.002; // Slower rotation speed
             controls.update();
             renderer.render(scene, camera);
         };
         animate();
-
+    
+        // Handle window resize
         const handleResize = () => {
             renderer.setSize(container.clientWidth, container.clientHeight);
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
         };
-
+    
         window.addEventListener('resize', handleResize);
         handleResize();
-
+    
+        // Clean up on component unmount
         return () => {
             window.removeEventListener('resize', handleResize);
             renderer.dispose();
             scene.dispose();
         };
     };
-
+    
+    
     return (
         <div className="shape-configurator">
             <h1>Cylinder Configurator</h1>
@@ -164,20 +183,9 @@ const CylinderPart = ({ initialDimensions }) => {
                         onChange={handleDimensionChange}
                     />
                 </label>
-                <label>
-                    Type:
-                    <select
-                        name="type"
-                        value={dimensions.type}
-                        onChange={handleSelectChange}
-                    >
-                        <option value="Single Shell">Single Shell</option>
-                        <option value="Double Shell">Double Shell</option>
-                    </select>
-                </label>
             </div>
-            <div id="shape-container" className="shape-container"></div>
-            {volume !== null && <p>Volume: {volume.toFixed(2)} cubic meters</p>}
+            <div id="shape-container"></div>
+            <div>{volume !== null && <p>Volume: {volume.toFixed(2)} cubic meters</p>}</div>
         </div>
     );
 };
